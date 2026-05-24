@@ -1,121 +1,110 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
 
+const BUTTONS = [
+  { label: 'AC', tone: 'function', action: 'clear' },
+  { label: '±', tone: 'function' },
+  { label: '%', tone: 'function' },
+  { label: '÷', tone: 'operator' },
+  { label: '7', tone: 'number', value: '7' },
+  { label: '8', tone: 'number', value: '8' },
+  { label: '9', tone: 'number', value: '9' },
+  { label: '×', tone: 'operator' },
+  { label: '4', tone: 'number', value: '4' },
+  { label: '5', tone: 'number', value: '5' },
+  { label: '6', tone: 'number', value: '6' },
+  { label: '-', tone: 'operator' },
+  { label: '1', tone: 'number', value: '1' },
+  { label: '2', tone: 'number', value: '2' },
+  { label: '3', tone: 'number', value: '3' },
+  { label: '+', tone: 'operator' },
+  { label: '0', tone: 'number', value: '0', wide: true },
+  { label: '.', tone: 'number', action: 'decimal' },
+  { label: '=', tone: 'operator' },
+]
+
+const MAX_DIGITS = 9
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [displayValue, setDisplayValue] = useState('0')
+
+  const resetDisplay = () => {
+    setDisplayValue('0')
+  }
+
+  const addDigit = (digit) => {
+    setDisplayValue((current) => {
+      if (current === '0') {
+        return digit
+      }
+
+      if (current.length >= MAX_DIGITS) {
+        return current
+      }
+
+      return `${current}${digit}`
+    })
+  }
+
+  const addDecimal = () => {
+    setDisplayValue((current) => {
+      if (current.includes('.')) {
+        return current
+      }
+
+      return `${current}.`
+    })
+  }
+
+  const handleButtonPress = (button) => {
+    if (button.action === 'clear') {
+      resetDisplay()
+      return
+    }
+
+    if (button.action === 'decimal') {
+      addDecimal()
+      return
+    }
+
+    if (button.value) {
+      addDigit(button.value)
+    }
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <main className="app-shell">
+      <section className="calculator" aria-label="Calculadora estilo iOS">
+        <div className="calculator__display">
+          <output className="calculator__value" aria-live="polite">
+            {displayValue}
+          </output>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
+        <div className="calculator__keypad">
+          {BUTTONS.map((button) => {
+            const className = [
+              'key',
+              `key--${button.tone}`,
+              button.wide ? 'key--wide' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+            return (
+              <button
+                key={button.label}
+                type="button"
+                className={className}
+                onClick={() => handleButtonPress(button)}
+              >
+                {button.label}
+              </button>
+            )
+          })}
         </div>
       </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    </main>
   )
 }
 
