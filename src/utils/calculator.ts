@@ -6,7 +6,7 @@ function trimFraction(text: string): string {
 }
 
 function formatValue(value: number): string {
-  if (!Number.isFinite(value)) {
+  if (!Number.isFinite(value) || value < 0) {
     return ERROR_DISPLAY
   }
 

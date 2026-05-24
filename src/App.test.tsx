@@ -75,6 +75,14 @@ describe('App calculator flow', () => {
     expect(getDisplay()).toHaveTextContent('36')
   })
 
+  it('shows ERROR when a subtraction result is negative', async () => {
+    const { getDisplay, pressSequence } = setup()
+
+    await pressSequence('1', '-', '2', '=')
+
+    expect(getDisplay()).toHaveTextContent('ERROR')
+  })
+
   it('supports decimal entry and keeps the decimal point within the display limit', async () => {
     const { getDisplay, pressSequence } = setup()
 
