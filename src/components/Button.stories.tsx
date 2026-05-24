@@ -4,6 +4,7 @@ import Button from './Button'
 const meta = {
   title: 'Components/Button',
   component: Button,
+  tags: ['autodocs'],
   args: {
     children: '7',
     onClick: () => undefined,

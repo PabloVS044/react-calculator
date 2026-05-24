@@ -5,6 +5,7 @@ import { BUTTONS } from '../constants/calculator'
 const meta = {
   title: 'Components/CalculatorKeypad',
   component: CalculatorKeypad,
+  tags: ['autodocs'],
   args: {
     buttons: BUTTONS,
     activeOperator: null,
@@ -21,5 +22,11 @@ export const Idle: Story = {}
 export const AdditionSelected: Story = {
   args: {
     activeOperator: '+',
+  },
+}
+
+export const MultiplicationSelected: Story = {
+  args: {
+    activeOperator: '×',
   },
 }

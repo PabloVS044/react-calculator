@@ -4,6 +4,7 @@ import CalculatorDisplay from './CalculatorDisplay'
 const meta = {
   title: 'Components/CalculatorDisplay',
   component: CalculatorDisplay,
+  tags: ['autodocs'],
   args: {
     displayValue: '0',
   },
@@ -24,5 +25,11 @@ export const SevenDigits: Story = {
 export const ErrorState: Story = {
   args: {
     displayValue: 'ERROR',
+  },
+}
+
+export const NineDigits: Story = {
+  args: {
+    displayValue: '123456789',
   },
 }
