@@ -4,7 +4,7 @@ Calculadora web inspirada en la interfaz de iOS, construida con React, TypeScrip
 
 ## Demo
 
-- Aplicación desplegada: http://35.232.139.23/pablo/react-calculator/
+- Aplicación desplegada: https://bombardeen-palencia.xyz/pablo/react-calculator/
 
 ## Funcionalidades
 
