@@ -1,6 +1,7 @@
 import { ERROR_DISPLAY, MAX_VALUE } from '../constants/calculator'
+import type { CalculatorOperator } from '../types/calculator'
 
-export function formatValue(value) {
+function formatValue(value: number): string {
   if (!Number.isFinite(value) || value < 0 || value > MAX_VALUE) {
     return ERROR_DISPLAY
   }
@@ -8,7 +9,11 @@ export function formatValue(value) {
   return Math.trunc(value).toString()
 }
 
-export function calculate(firstValue, secondValue, operator) {
+function calculate(
+  firstValue: number,
+  secondValue: number,
+  operator: CalculatorOperator,
+): number {
   switch (operator) {
     case '+':
       return firstValue + secondValue
@@ -16,7 +21,7 @@ export function calculate(firstValue, secondValue, operator) {
       return firstValue - secondValue
     case '×':
       return firstValue * secondValue
-    default:
-      return secondValue
   }
 }
+
+export { calculate, formatValue }

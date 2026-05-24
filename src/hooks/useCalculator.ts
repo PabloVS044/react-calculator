@@ -1,26 +1,33 @@
 import { useState } from 'react'
 import { ERROR_DISPLAY, MAX_DIGITS } from '../constants/calculator'
+import type {
+  CalculatorButton,
+  CalculatorDigit,
+  CalculatorOperator,
+  UseCalculatorResult,
+} from '../types/calculator'
 import { calculate, formatValue } from '../utils/calculator'
 
-export function useCalculator() {
+function useCalculator(): UseCalculatorResult {
   const [displayValue, setDisplayValue] = useState('0')
-  const [storedValue, setStoredValue] = useState(null)
-  const [pendingOperator, setPendingOperator] = useState(null)
+  const [storedValue, setStoredValue] = useState<number | null>(null)
+  const [pendingOperator, setPendingOperator] =
+    useState<CalculatorOperator | null>(null)
   const [shouldResetDisplay, setShouldResetDisplay] = useState(false)
 
-  const clearAll = () => {
+  const clearAll = (): void => {
     setDisplayValue('0')
     setStoredValue(null)
     setPendingOperator(null)
     setShouldResetDisplay(false)
   }
 
-  const replaceDisplay = (nextValue) => {
+  const replaceDisplay = (nextValue: string): void => {
     setDisplayValue(nextValue)
     setShouldResetDisplay(false)
   }
 
-  const inputDigit = (digit) => {
+  const inputDigit = (digit: CalculatorDigit): void => {
     if (displayValue === ERROR_DISPLAY || shouldResetDisplay) {
       replaceDisplay(digit)
       return
@@ -35,10 +42,14 @@ export function useCalculator() {
       return
     }
 
-    setDisplayValue((current) => `${current}${digit}`)
+    setDisplayValue((currentValue) => `${currentValue}${digit}`)
   }
 
-  const solvePendingOperation = (firstValue, secondValue, operator) => {
+  const solvePendingOperation = (
+    firstValue: number,
+    secondValue: number,
+    operator: CalculatorOperator,
+  ): number | null => {
     const result = calculate(firstValue, secondValue, operator)
     const formattedResult = formatValue(result)
 
@@ -52,12 +63,14 @@ export function useCalculator() {
     }
 
     const numericResult = Number(formattedResult)
+
     setStoredValue(numericResult)
     setShouldResetDisplay(true)
+
     return numericResult
   }
 
-  const handleOperator = (nextOperator) => {
+  const handleOperator = (nextOperator: CalculatorOperator): void => {
     if (displayValue === ERROR_DISPLAY) {
       clearAll()
       return
@@ -90,7 +103,7 @@ export function useCalculator() {
     setShouldResetDisplay(true)
   }
 
-  const handleEquals = () => {
+  const handleEquals = (): void => {
     if (
       displayValue === ERROR_DISPLAY ||
       pendingOperator === null ||
@@ -104,13 +117,13 @@ export function useCalculator() {
     setPendingOperator(null)
   }
 
-  const handleButtonPress = (button) => {
-    if (button.value) {
+  const handleButtonPress = (button: CalculatorButton): void => {
+    if ('value' in button) {
       inputDigit(button.value)
       return
     }
 
-    if (button.operator) {
+    if ('operator' in button) {
       handleOperator(button.operator)
       return
     }
@@ -131,3 +144,5 @@ export function useCalculator() {
     handleButtonPress,
   }
 }
+
+export { useCalculator }

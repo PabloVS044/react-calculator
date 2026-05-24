@@ -1,6 +1,10 @@
 import { ERROR_DISPLAY } from '../constants/calculator'
 
-function getDisplayClassName(displayValue) {
+interface CalculatorDisplayProps {
+  displayValue: string
+}
+
+function getDisplayClassName(displayValue: string): string {
   return [
     'calculator__value',
     displayValue.length >= 7 ? 'calculator__value--compact' : '',
@@ -12,7 +16,7 @@ function getDisplayClassName(displayValue) {
     .join(' ')
 }
 
-function CalculatorDisplay({ displayValue }) {
+function CalculatorDisplay({ displayValue }: CalculatorDisplayProps) {
   return (
     <div className="calculator__display">
       <output className={getDisplayClassName(displayValue)} aria-live="polite">

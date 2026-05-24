@@ -1,3 +1,21 @@
+import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
+import type { ButtonVisualProps } from '../types/button'
+
+type ButtonStyleVariables =
+  | '--button-bg'
+  | '--button-color'
+  | '--button-selected-bg'
+  | '--button-selected-color'
+  | '--button-justify'
+
+type ButtonStyle = CSSProperties & Record<ButtonStyleVariables, string>
+
+interface ButtonProps extends ButtonVisualProps {
+  children: ReactNode
+  onClick: MouseEventHandler<HTMLButtonElement>
+  isSelected?: boolean
+}
+
 function Button({
   children,
   onClick,
@@ -8,8 +26,8 @@ function Button({
   selectedBackgroundColor,
   selectedTextColor,
   justify = 'center',
-}) {
-  const style = {
+}: ButtonProps) {
+  const style: ButtonStyle = {
     '--button-bg': backgroundColor,
     '--button-color': textColor,
     '--button-selected-bg': selectedBackgroundColor ?? backgroundColor,
