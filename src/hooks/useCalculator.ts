@@ -27,13 +27,16 @@ function useCalculator(): UseCalculatorResult {
     setShouldResetDisplay(false)
   }
 
+  const hasReachedCharacterLimit = (value: string): boolean =>
+    value.length >= MAX_DIGITS
+
   const inputDigit = (digit: CalculatorDigit): void => {
     if (displayValue === ERROR_DISPLAY || shouldResetDisplay) {
       replaceDisplay(digit)
       return
     }
 
-    if (displayValue.length >= MAX_DIGITS) {
+    if (hasReachedCharacterLimit(displayValue)) {
       return
     }
 
@@ -42,7 +45,42 @@ function useCalculator(): UseCalculatorResult {
       return
     }
 
+    if (displayValue === '-0') {
+      setDisplayValue(`-${digit}`)
+      return
+    }
+
     setDisplayValue((currentValue) => `${currentValue}${digit}`)
+  }
+
+  const inputDecimal = (): void => {
+    if (displayValue === ERROR_DISPLAY || shouldResetDisplay) {
+      replaceDisplay('0.')
+      return
+    }
+
+    if (displayValue.includes('.') || hasReachedCharacterLimit(displayValue)) {
+      return
+    }
+
+    setDisplayValue((currentValue) => `${currentValue}.`)
+  }
+
+  const toggleSign = (): void => {
+    if (displayValue === ERROR_DISPLAY || displayValue === '0') {
+      return
+    }
+
+    if (displayValue.startsWith('-')) {
+      setDisplayValue(displayValue.slice(1))
+      return
+    }
+
+    if (hasReachedCharacterLimit(displayValue)) {
+      return
+    }
+
+    setDisplayValue(`-${displayValue}`)
   }
 
   const solvePendingOperation = (
@@ -125,6 +163,16 @@ function useCalculator(): UseCalculatorResult {
 
     if ('operator' in button) {
       handleOperator(button.operator)
+      return
+    }
+
+    if (button.action === 'decimal') {
+      inputDecimal()
+      return
+    }
+
+    if (button.action === 'toggle-sign') {
+      toggleSign()
       return
     }
 

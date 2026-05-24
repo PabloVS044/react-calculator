@@ -12,8 +12,8 @@ export type CalculatorDigit =
   | '8'
   | '9'
 
-export type CalculatorOperator = '+' | '-' | '×'
-export type CalculatorAction = 'clear' | 'equals'
+export type CalculatorOperator = '+' | '-' | '×' | '÷' | '%'
+export type CalculatorAction = 'clear' | 'equals' | 'decimal' | 'toggle-sign'
 
 interface BaseCalculatorButton extends ButtonVisualProps {
   label: string

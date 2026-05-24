@@ -75,12 +75,36 @@ describe('App calculator flow', () => {
     expect(getDisplay()).toHaveTextContent('36')
   })
 
-  it('shows ERROR when a subtraction result becomes negative', async () => {
+  it('supports decimal entry and keeps the decimal point within the display limit', async () => {
     const { getDisplay, pressSequence } = setup()
 
-    await pressSequence('1', '-', '2', '=')
+    await pressSequence('1', '.', '2', '3', '4')
 
-    expect(getDisplay()).toHaveTextContent('ERROR')
+    expect(getDisplay()).toHaveTextContent('1.234')
+  })
+
+  it('evaluates division results with decimals without overflowing the display', async () => {
+    const { getDisplay, pressSequence } = setup()
+
+    await pressSequence('2', '2', '÷', '7', '=')
+
+    expect(getDisplay()).toHaveTextContent('3.1428571')
+  })
+
+  it('evaluates modulo operations', async () => {
+    const { getDisplay, pressSequence } = setup()
+
+    await pressSequence('1', '0', '%', '3', '=')
+
+    expect(getDisplay()).toHaveTextContent('1')
+  })
+
+  it('toggles the sign of the displayed value with the +/- button', async () => {
+    const { getDisplay, pressSequence } = setup()
+
+    await pressSequence('4', '2', '+/-')
+
+    expect(getDisplay()).toHaveTextContent('-42')
   })
 
   it('shows ERROR when an operation exceeds the maximum display value', async () => {

@@ -19,10 +19,14 @@ const OPERATOR_BUTTON_STYLE = {
 } satisfies ButtonVisualProps
 
 export const BUTTONS = [
+  { label: 'AC', action: 'clear', ...FUNCTION_BUTTON_STYLE },
+  { label: '+/-', action: 'toggle-sign', ...FUNCTION_BUTTON_STYLE },
+  { label: '%', operator: '%', ...FUNCTION_BUTTON_STYLE },
+  { label: '÷', operator: '÷', ...OPERATOR_BUTTON_STYLE },
   { label: '7', value: '7', ...NUMBER_BUTTON_STYLE },
   { label: '8', value: '8', ...NUMBER_BUTTON_STYLE },
   { label: '9', value: '9', ...NUMBER_BUTTON_STYLE },
-  { label: '+', operator: '+', ...OPERATOR_BUTTON_STYLE },
+  { label: '×', operator: '×', ...OPERATOR_BUTTON_STYLE },
   { label: '4', value: '4', ...NUMBER_BUTTON_STYLE },
   { label: '5', value: '5', ...NUMBER_BUTTON_STYLE },
   { label: '6', value: '6', ...NUMBER_BUTTON_STYLE },
@@ -30,7 +34,7 @@ export const BUTTONS = [
   { label: '1', value: '1', ...NUMBER_BUTTON_STYLE },
   { label: '2', value: '2', ...NUMBER_BUTTON_STYLE },
   { label: '3', value: '3', ...NUMBER_BUTTON_STYLE },
-  { label: '×', operator: '×', ...OPERATOR_BUTTON_STYLE },
+  { label: '+', operator: '+', ...OPERATOR_BUTTON_STYLE },
   {
     label: '0',
     value: '0',
@@ -38,7 +42,7 @@ export const BUTTONS = [
     justify: 'flex-start',
     ...NUMBER_BUTTON_STYLE,
   },
-  { label: 'AC', action: 'clear', ...FUNCTION_BUTTON_STYLE },
+  { label: '.', action: 'decimal', ...NUMBER_BUTTON_STYLE },
   { label: '=', action: 'equals', ...OPERATOR_BUTTON_STYLE },
 ] satisfies ReadonlyArray<CalculatorButton>
 
