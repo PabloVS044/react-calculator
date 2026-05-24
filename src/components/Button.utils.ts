@@ -4,7 +4,11 @@ export function getButtonClassName({
   wide = false,
   isSelected = false,
 }: Pick<ButtonProps, 'wide' | 'isSelected'>): string {
-  return ['app-button', wide ? 'app-button--wide' : '', isSelected ? 'app-button--selected' : ''].filter(Boolean).join(' ')
+  return [
+    'app-button',
+    wide ? 'app-button--wide' : '',
+    isSelected ? 'app-button--selected' : '',
+  ].filter(Boolean).join(' ')
 }
 
 export function getButtonStyle({

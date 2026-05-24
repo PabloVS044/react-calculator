@@ -5,6 +5,44 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
+const noSemicolonsRule = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'Prohibits semicolons in project source files',
+    },
+    schema: [],
+    messages: {
+      forbiddenSemicolon: 'Los puntos y coma estan prohibidos en este proyecto.',
+    },
+  },
+  create(context) {
+    return {
+      Program(node) {
+        for (const token of context.sourceCode.getTokens(node)) {
+          if (token.type === 'Punctuator' && token.value === ';') {
+            context.report({
+              loc: token.loc,
+              messageId: 'forbiddenSemicolon',
+            })
+          }
+        }
+      },
+    }
+  },
+}
+
+const localPlugin = {
+  rules: {
+    'no-semicolons': noSemicolonsRule,
+  },
+}
+
+const rubricRules = {
+  'local/no-semicolons': 'error',
+  'max-len': ['error', { code: 120 }],
+}
+
 export default defineConfig([
   globalIgnores(['dist', 'storybook-static']),
   {
@@ -23,7 +61,11 @@ export default defineConfig([
         ecmaFeatures: { jsx: true },
       },
     },
+    plugins: {
+      local: localPlugin,
+    },
     rules: {
+      ...rubricRules,
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {
@@ -39,6 +81,10 @@ export default defineConfig([
     languageOptions: {
       globals: globals.node,
     },
+    plugins: {
+      local: localPlugin,
+    },
+    rules: rubricRules,
   },
   {
     files: ['eslint.config.js'],
@@ -46,5 +92,9 @@ export default defineConfig([
     languageOptions: {
       globals: globals.node,
     },
+    plugins: {
+      local: localPlugin,
+    },
+    rules: rubricRules,
   },
 ])

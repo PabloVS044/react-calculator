@@ -4,7 +4,12 @@ function CalculatorKeypad({ buttons, activeOperator, onButtonPress }: Calculator
   return (
     <div className="calculator__keypad">
       {buttons.map((button) => (
-        <CalculatorKey key={button.label} button={button} activeOperator={activeOperator} onButtonPress={onButtonPress} />
+        <CalculatorKey
+          key={button.label}
+          button={button}
+          activeOperator={activeOperator}
+          onButtonPress={onButtonPress}
+        />
       ))}
     </div>
   )
