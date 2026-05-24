@@ -2,14 +2,10 @@ import { useState } from 'react'
 import './App.css'
 
 const BUTTONS = [
-  { label: 'AC', tone: 'function', action: 'clear' },
-  { label: '±', tone: 'function', action: 'toggle-sign' },
-  { label: '%', tone: 'function', action: 'percent' },
-  { label: '÷', tone: 'operator', operator: '÷' },
   { label: '7', tone: 'number', value: '7' },
   { label: '8', tone: 'number', value: '8' },
   { label: '9', tone: 'number', value: '9' },
-  { label: '×', tone: 'operator', operator: '×' },
+  { label: '+', tone: 'operator', operator: '+' },
   { label: '4', tone: 'number', value: '4' },
   { label: '5', tone: 'number', value: '5' },
   { label: '6', tone: 'number', value: '6' },
@@ -17,20 +13,21 @@ const BUTTONS = [
   { label: '1', tone: 'number', value: '1' },
   { label: '2', tone: 'number', value: '2' },
   { label: '3', tone: 'number', value: '3' },
-  { label: '+', tone: 'operator', operator: '+' },
+  { label: '×', tone: 'operator', operator: '×' },
   { label: '0', tone: 'number', value: '0', wide: true },
-  { label: '.', tone: 'number', action: 'decimal' },
+  { label: 'AC', tone: 'function', action: 'clear' },
   { label: '=', tone: 'operator', action: 'equals' },
 ]
 
-const MAX_DIGITS = 12
+const MAX_DIGITS = 9
+const MAX_VALUE = 999999999
 
 function formatValue(value) {
-  if (!Number.isFinite(value)) {
-    return 'Error'
+  if (!Number.isFinite(value) || value < 0 || value > MAX_VALUE) {
+    return 'ERROR'
   }
 
-  return Number(value.toPrecision(12)).toString()
+  return Math.trunc(value).toString()
 }
 
 function calculate(firstValue, secondValue, operator) {
@@ -41,8 +38,6 @@ function calculate(firstValue, secondValue, operator) {
       return firstValue - secondValue
     case '×':
       return firstValue * secondValue
-    case '÷':
-      return secondValue === 0 ? Number.NaN : firstValue / secondValue
     default:
       return secondValue
   }
@@ -67,14 +62,12 @@ function App() {
   }
 
   const inputDigit = (digit) => {
-    if (displayValue === 'Error' || shouldResetDisplay) {
+    if (displayValue === 'ERROR' || shouldResetDisplay) {
       replaceDisplay(digit)
       return
     }
 
-    const numericLength = displayValue.replace('-', '').replace('.', '').length
-
-    if (numericLength >= MAX_DIGITS) {
+    if (displayValue.length >= MAX_DIGITS) {
       return
     }
 
@@ -86,48 +79,13 @@ function App() {
     setDisplayValue((current) => `${current}${digit}`)
   }
 
-  const inputDecimal = () => {
-    if (displayValue === 'Error' || shouldResetDisplay) {
-      replaceDisplay('0.')
-      return
-    }
-
-    if (displayValue.includes('.')) {
-      return
-    }
-
-    setDisplayValue((current) => `${current}.`)
-  }
-
-  const toggleSign = () => {
-    if (displayValue === 'Error' || displayValue === '0') {
-      return
-    }
-
-    setDisplayValue((current) =>
-      current.startsWith('-') ? current.slice(1) : `-${current}`,
-    )
-  }
-
-  const convertToPercent = () => {
-    if (displayValue === 'Error') {
-      clearAll()
-      return
-    }
-
-    const nextValue = formatValue(Number(displayValue) / 100)
-
-    setDisplayValue(nextValue)
-    setShouldResetDisplay(false)
-  }
-
   const solvePendingOperation = (firstValue, secondValue, operator) => {
     const result = calculate(firstValue, secondValue, operator)
     const formattedResult = formatValue(result)
 
     setDisplayValue(formattedResult)
 
-    if (formattedResult === 'Error') {
+    if (formattedResult === 'ERROR') {
       setStoredValue(null)
       setPendingOperator(null)
       setShouldResetDisplay(true)
@@ -141,7 +99,7 @@ function App() {
   }
 
   const handleOperator = (nextOperator) => {
-    if (displayValue === 'Error') {
+    if (displayValue === 'ERROR') {
       clearAll()
       return
     }
@@ -175,7 +133,7 @@ function App() {
 
   const handleEquals = () => {
     if (
-      displayValue === 'Error' ||
+      displayValue === 'ERROR' ||
       pendingOperator === null ||
       storedValue === null ||
       shouldResetDisplay
@@ -198,24 +156,13 @@ function App() {
       return
     }
 
-    switch (button.action) {
-      case 'clear':
-        clearAll()
-        break
-      case 'decimal':
-        inputDecimal()
-        break
-      case 'toggle-sign':
-        toggleSign()
-        break
-      case 'percent':
-        convertToPercent()
-        break
-      case 'equals':
-        handleEquals()
-        break
-      default:
-        break
+    if (button.action === 'clear') {
+      clearAll()
+      return
+    }
+
+    if (button.action === 'equals') {
+      handleEquals()
     }
   }
 
