@@ -1,21 +1,5 @@
-import { ERROR_DISPLAY } from '../constants/calculator'
-
-interface CalculatorDisplayProps {
-  displayValue: string
-}
-
-function getDisplayClassName(displayValue: string): string {
-  return [
-    'calculator__value',
-    displayValue.length >= 7 ? 'calculator__value--compact' : '',
-    displayValue.length >= 9 || displayValue === ERROR_DISPLAY
-      ? 'calculator__value--tiny'
-      : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
-}
-
+import type { CalculatorDisplayProps } from './CalculatorDisplay.types'
+import { getDisplayClassName } from './CalculatorDisplay.utils'
 function CalculatorDisplay({ displayValue }: CalculatorDisplayProps) {
   return (
     <div className="calculator__display">
@@ -25,5 +9,4 @@ function CalculatorDisplay({ displayValue }: CalculatorDisplayProps) {
     </div>
   )
 }
-
 export default CalculatorDisplay
